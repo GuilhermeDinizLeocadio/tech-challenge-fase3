@@ -1,0 +1,23 @@
+# ── Dados brutos e processados ──────────────────────────────
+data/raw/
+data/processed/
+models/
+
+# ── Python ──────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+.venv/
+*.egg-info/
+
+# ── Jupyter ─────────────────────────────────────────────────
+.ipynb_checkpoints/
+
+# ── VS Code ─────────────────────────────────────────────────
+.vscode/
+
+# ── OS ──────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
