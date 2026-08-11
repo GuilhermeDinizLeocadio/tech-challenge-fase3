@@ -1,8 +1,8 @@
 # =============================================================
 # BUILD BASE — Construção da Base de Modelagem
 #
-# Lê os CSVs Bronze locais, aplica as regras de negócio
-# definidas na Etapa 1, e salva a base de modelagem em
+# Lê os CSVs Bronze locais, aplica as regras de negócio,
+# enriquece com dados do IBGE e salva a base de modelagem em
 # data/processed/base_modelagem.parquet
 #
 # ALVO: atingiu_meta_2025
@@ -124,10 +124,22 @@ def construir_alvo(df):
 def adicionar_features_territoriais(df):
     """
     Adiciona região geográfica a partir da UF.
-    É a única feature territorial disponível antes
-    do enriquecimento externo (Semana 2).
     """
     df['regiao'] = df['uf'].map(REGIOES)
+    return df
+
+def adicionar_features_derivadas(df):
+    """
+    Cria features de engenharia a partir do histórico:
+    - variacao_2023_2024: tendência absoluta (pp de mudança)
+    - melhorou: flag binária se a taxa subiu
+
+    A EDA mostrou que taxa_2023 e taxa_2024 têm correlação
+    de sinais opostos com o alvo — indício de que a DINÂMICA
+    (trajetória) é mais informativa que os valores isolados.
+    """
+    df['variacao_2023_2024'] = (df['taxa_2024'] - df['taxa_2023']).round(2)
+    df['melhorou'] = (df['variacao_2023_2024'] > 0).astype(int)
     return df
 
 def descartar_leakage(df):
@@ -186,14 +198,31 @@ def main():
     print('\n🗺️  Adicionando features territoriais...')
     df = adicionar_features_territoriais(df)
 
+    # 4b. Features derivadas (tendência)
+    print('\n📈 Adicionando features derivadas...')
+    df = adicionar_features_derivadas(df)
+
     # 5. Descartar leakage
     print('\n🚫 Descartando leakage...')
     df = descartar_leakage(df)
 
-    # 6. Diagnóstico
+    # 6. Enriquecimento externo (IBGE) — importado do módulo
+    print('\n🌎 Enriquecendo com dados do IBGE...')
+    from enriquecer_ibge import buscar_agregado
+    pop = buscar_agregado(6579, 9324, 'População estimada')
+    pop.columns = ['id_municipio', 'populacao']
+    pib = buscar_agregado(5938, 37, 'PIB total municipal')
+    pib.columns = ['id_municipio', 'pib_total_mil']
+    df = df.merge(pop, on='id_municipio', how='left')
+    df = df.merge(pib, on='id_municipio', how='left')
+    df['pib_per_capita'] = (
+        (df['pib_total_mil'] * 1000) / df['populacao']
+    ).round(2)
+
+    # 7. Diagnóstico
     diagnostico(df)
 
-    # 7. Salvar
+    # 8. Salvar
     saida = OUT / 'base_modelagem.parquet'
     df.to_parquet(saida, index=False, engine='pyarrow')
     print(f'\n💾 Salvo em: {saida}')
