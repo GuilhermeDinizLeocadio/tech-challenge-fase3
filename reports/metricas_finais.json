@@ -1,0 +1,18 @@
+{
+  "modelo": "Gradient Boosting (otimizado)",
+  "hiperparametros": {
+    "clf__learning_rate": 0.05,
+    "clf__max_depth": 4,
+    "clf__n_estimators": 100
+  },
+  "baseline": 0.728,
+  "teste": {
+    "accuracy": 0.795,
+    "precision": 0.811,
+    "recall": 0.937,
+    "f1": 0.869,
+    "roc_auc": 0.829
+  },
+  "recall_classe_0": 0.416,
+  "observacao": "Recall baixo na classe 0 (municipios em risco) e o principal achado — features separam melhor sucesso que fracasso."
+}
