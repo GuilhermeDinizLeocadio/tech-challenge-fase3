@@ -1,10 +1,11 @@
-# Dados brutos e processados (pastas visíveis, arquivos ignorados)
-data/raw/*
+# Dados processados e modelos (gerados por script, não versionados)
 data/processed/*
 models/*
-!data/raw/.gitkeep
 !data/processed/.gitkeep
 !models/.gitkeep
+
+# Dados brutos: os CSVs de origem SÃO versionados para
+# garantir reprodutibilidade (arquivos públicos e leves)
 # ── Python ──────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
