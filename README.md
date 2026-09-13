@@ -129,7 +129,7 @@ coletada externamente.
 ```
 tech-challenge-fase3/
 ├── data/
-│   ├── raw/                    # CSVs brutos (não versionados)
+│   ├── raw/                    # CSVs brutos
 │   └── processed/              # base_modelagem.parquet (não versionada)
 ├── notebooks/
 │   ├── 01_eda.ipynb            # Análise exploratória
