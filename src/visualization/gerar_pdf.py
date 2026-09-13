@@ -171,6 +171,7 @@ blockquote {
 }
 .figura {
     -pdf-keep-in-frame-mode: shrink;
+}
 .figura img {
     width: 17cm;
     margin: 14px 0;

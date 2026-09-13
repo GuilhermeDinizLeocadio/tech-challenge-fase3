@@ -143,13 +143,16 @@ tech-challenge-fase3/
 │   ├── modeling/
 │   │   └── train.py            # Treino, CV e otimização
 │   ├── evaluation/
-│   │   └── metrics.py          # Métricas, matriz de confusão, threshold
+│   │   ├── metrics.py          # Métricas, matriz de confusão, threshold
+│   │   └── ranking_nomes.py    # Ranking de municípios com nomes
 │   └── visualization/
 │       └── plots.py            # Geração de figuras
 ├── models/                     # Modelo serializado (não versionado)
 ├── reports/
 │   ├── figures/                # Visualizações geradas
-│   └── metricas_finais.json
+│   ├── documentacao_tecnica.pdf
+│   ├── metricas_finais.json
+│   └── ranking_municipios_risco.csv
 ├── requirements.txt
 ├── README.md
 └── .gitignore
@@ -187,6 +190,10 @@ python src/evaluation/metrics.py
 
 # 8. Gere as visualizações
 python src/visualization/plots.py
+
+
+# 9. Gere o ranking de municípios em risco (com nomes)
+python src/evaluation/ranking_nomes.py
 
 # Alternativamente, execute os notebooks em ordem:
 # notebooks/01_eda.ipynb → notebooks/02_modeling.ipynb
